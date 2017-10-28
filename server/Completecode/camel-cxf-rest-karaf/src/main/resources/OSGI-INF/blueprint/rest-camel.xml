@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+           xsi:schemaLocation="
+             http://www.osgi.org/xmlns/blueprint/v1.0.0 https://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+             http://camel.apache.org/schema/blueprint/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+             http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd
+             ">
+
+  <bean id="twitterService" class="com.primarykey.impl.TwitterServiceImpl" />
+
+  <!-- enable json support -->
+  <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+
+  <!-- CXF-RS server as a bean where we setup the REST web service using the resource class
+       and can do additional configurations -->
+  <cxf:rsServer id="twitterRestService" address="http://localhost:8080"
+                serviceClass="com.primarykey.api.TwitterRestService">
+    <cxf:providers>
+      <ref component-id="jsonProvider" />
+    </cxf:providers>
+  </cxf:rsServer>
+
+  <camelContext id="camel" xmlns="http://camel.apache.org/schema/blueprint">
+
+    <route>
+      <!-- use cxfrs:bean and enable the simple binding style -->
+      <from uri="cxfrs:bean:twitterRestService?bindingStyle=SimpleConsumer"/>
+      <!-- call the route based on the operation invoked on the REST web service -->
+      <toD uri="direct:${header.operationName}"/>
+    </route>
+
+    <!-- Camel rest routes for twitter api calls.  -->
+    <route>
+      <from uri="direct:getTweet"/>
+      <bean ref="twitterService" method="getTweet(${header.id})"/>
+    </route>
+    
+     <route>
+      <from uri="direct:searchTweet"/>
+      <bean ref="twitterService" method="searchTweet(${header.id})"/>
+    </route>
+    
+    <route>
+      <from uri="direct:getTimeLine"/>
+      <bean ref="twitterService" method="getTimeLine()"/>
+    </route>
+    
+     <route>
+      <from uri="direct:getScreenName"/>
+      <bean ref="twitterService" method="getScreenName()"/>
+    </route>
+    
+      <route>
+      <from uri="direct:getReTweet"/>
+      <bean ref="twitterService" method="getReTweet()"/>
+    </route>
+    
+     <route>
+      <from uri="direct:getSuggestedUserCategories"/>
+      <bean ref="twitterService" method="getSuggestedUserCategories()"/>
+    </route>
+    
+    <route>
+      <from uri="direct:getAvaialbleTrends"/>
+      <bean ref="twitterService" method="getAvaialbleTrends()"/>
+    </route>
+    
+     <route>
+      <from uri="direct:getFollowersIds"/>
+      <bean ref="twitterService" method="getFollowersIds()"/>
+    </route>
+    
+     <route>
+      <from uri="direct:getSavedSearches"/>
+      <bean ref="twitterService" method="getSavedSearches()"/>
+    </route>
+    
+    
+   
+
+  </camelContext>
+
+</blueprint>
