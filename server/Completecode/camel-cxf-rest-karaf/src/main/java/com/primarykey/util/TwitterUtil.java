@@ -28,10 +28,10 @@ public class TwitterUtil {
 
 	public TwitterUtil() {
 
-		String consumerKeyStr = "v4JGV4NdGVjzl1yBARJQpNU9V";
-		String consumerSecretStr = "PoT5hGzs7xABwoYW2ck2faiDaq7SG6gv9ctrOESYRmKPWQzYnG";
-		String accessTokenStr = "916783602129543168-L8qcEHbBYEdD1czFqMznLCXz0l2qdha";
-		String accessTokenSecretStr = "toS0piP5FfwyNZCh62zcUZJgUJqinxuyXkVwJvBKiWd6Z";
+		String consumerKeyStr = "xxxx";
+		String consumerSecretStr = "xxxx";
+		String accessTokenStr = "xxxx";
+		String accessTokenSecretStr = "xxxx";
 		System.setProperty("http.useSSL", "true");
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
